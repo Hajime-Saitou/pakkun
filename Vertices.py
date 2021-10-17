@@ -3,9 +3,10 @@ import bpy
 from mathutils import Vector
 
 class Vertices(object):
-    def __init__(self, vertices):
+    def __init__(self, vertices, origin):
         self.vertices = vertices
         self._iterIndex = 0
+        self.origin = origin
 
     def __iter__(self):
         return self
@@ -18,6 +19,9 @@ class Vertices(object):
         else:
             self._iterIndex = 0
             raise StopIteration()
+
+    def __getitem__(self, key):
+        return Vertex(self.vertices[key], origin=self.origin)
 
     @property
     def length(self) -> int:
