@@ -9,6 +9,7 @@ class MeshObject(object):
         self.object = object
         self.name = name
         self.mesh = self.object.data
+        self.origin = Origin(self.object, self)
 
     @property
     def vertexGroups(self):
@@ -16,7 +17,7 @@ class MeshObject(object):
     
     @property
     def vertices(self):
-        return Vertices(self.mesh.vertices, self)
+        return Vertices(self.mesh.vertices, self.origin)
 
     @property
     def faces(self):
