@@ -36,9 +36,8 @@ class Vertex(bpy.types.MeshVertex):
             return self.vertex.groups[vertexGroupIndex].weight
         else:
             weights = {}
-            for vertexGroup in self.origin.origin.vertex_groups:
-                vertexGroupIndex = self.origin.origin.vertex_groups.find(vertexGroup.name)
-                weights[vertexGroup.name] = self.groups[vertexGroupIndex].weight
+            for ordinal, vertexGroup in enumerate(self.origin.origin.vertex_groups):
+                weights[vertexGroup.name] = self.groups[ordinal].weight
 
             return weights
 
