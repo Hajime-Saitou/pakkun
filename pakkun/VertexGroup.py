@@ -1,5 +1,7 @@
 import bpy
 from mathutils import Vector
+from .Origin import Origin
+from .Vertices import Vertices
 
 class VertexGroup(object):
     def __init__(self, object, name:str):

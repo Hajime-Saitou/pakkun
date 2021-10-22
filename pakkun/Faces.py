@@ -1,4 +1,4 @@
-import bpy
+from .Face import Face
 
 class Faces(object):
     def __init__(self, object):

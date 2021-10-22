@@ -1,4 +1,4 @@
-import bpy
+from .VertexGroup import VertexGroup
 
 class VertexGroups(object):
     def __init__(self, object):

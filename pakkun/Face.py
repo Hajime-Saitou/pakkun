@@ -1,4 +1,5 @@
-import bpy
+from .Origin import Origin
+from .Vertices import Vertices
 
 class Face(object):
     def __init__(self, object, key:int):

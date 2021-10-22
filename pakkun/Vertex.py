@@ -1,5 +1,4 @@
 import bpy
-from mathutils import Vector
 
 class Vertex(bpy.types.MeshVertex):
     def __init__(self, vertex, origin):

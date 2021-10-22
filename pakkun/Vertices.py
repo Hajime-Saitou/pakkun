@@ -1,5 +1,4 @@
-
-import bpy
+from .Vertex import Vertex
 from mathutils import Vector
 
 class Vertices(object):

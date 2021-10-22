@@ -1,4 +1,8 @@
 import bpy
+from .VertexGroups import VertexGroups
+from .Vertices import Vertices
+from .Faces import Faces
+from .Origin import Origin
 
 class MeshObject(object):
     def __init__(self, name:str):
