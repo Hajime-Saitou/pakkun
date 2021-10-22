@@ -2,11 +2,11 @@ from .Origin import Origin
 from .Vertices import Vertices
 
 class Face(object):
-    def __init__(self, object, key:int):
+    def __init__(self, object, index:int):
         self.object = object
-        self.name = str(key)
+        self.index = index
         self.origin = Origin(self.object, self)
-        self.face = self.object.data.polygons[key]
+        self.face = self.object.data.polygons[index]
 
     @property
     def vertices(self):
@@ -20,3 +20,7 @@ class Face(object):
     def toLoopIndex(self, vertexIndex:int):
         print(vertexIndex)
         return self.loopIndices[[ index for index in self.face.vertices ].index(vertexIndex)]
+
+    @property
+    def materialIndex(self):
+        return self.face.material_index
