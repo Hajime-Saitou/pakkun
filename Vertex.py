@@ -1,13 +1,13 @@
 import bpy
 from mathutils import Vector
-import json
 
 class Vertex(bpy.types.MeshVertex):
     def __init__(self, vertex, origin):
         self.vertex = vertex
         self.origin = origin
 
-    def __str__(self):
+    @property
+    def serialize(self) -> dict:
         properties = {}
         properties["index"] = self.index
         properties["co"] = tuple(self.co)
@@ -17,11 +17,11 @@ class Vertex(bpy.types.MeshVertex):
         properties["undeformed_co"] = tuple(self.undeformed_co)
 
         if self.origin.belongTo == "VertexGroup":
-            properties["weight"] = { self.origin.accessor.name: self.weight }
+            properties["weight"] = [ { self.origin.accessor.name: self.weight } ]
         else:
             properties["weight"] = self.weight
 
-        return json.dumps(properties, indent=4)
+        return properties
 
     @property
     def weight(self):
@@ -35,9 +35,13 @@ class Vertex(bpy.types.MeshVertex):
 
             return self.vertex.groups[vertexGroupIndex].weight
         else:
-            weights = {}
+            if len(self.vertex.groups) == 0:
+                return []
+
+            weights = []
             for ordinal, vertexGroup in enumerate(self.origin.origin.vertex_groups):
-                weights[vertexGroup.name] = self.groups[ordinal].weight
+                if ordinal in [ group.group for group in self.vertex.groups ]:
+                    weights.append({ vertexGroup.name: self.vertex.groups[ordinal].weight })
 
             return weights
 

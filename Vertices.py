@@ -24,6 +24,14 @@ class Vertices(object):
         return Vertex(self.vertices[key], origin=self.origin)
 
     @property
+    def serialize(self) -> dict:
+        dic = { "vertices": [] }
+        for vertex in self.vertices:
+            dic["vertices"].append(Vertex(vertex, origin=self.origin).serialize)
+        
+        return dic
+
+    @property
     def length(self) -> int:
         return len(self.vertices)
 
@@ -53,3 +61,21 @@ class Vertices(object):
             maximum.z = max(maximum.z, vertex.co.z)
 
         return maximum - minimum
+
+    def scale(self, scale:Vector, weighted:bool=False):
+        for vertex in self.vertices:
+            v = Vertex(vertex, origin=self.origin)
+            weight = 1 if not weighted else v.weight
+            vertex.co.x *= scale.x * weight
+            vertex.co.y *= scale.y * weight
+            vertex.co.z *= scale.z * weight
+
+        self.origin.origin.data.update()
+
+    def translate(self, translate:Vector, weighted:bool=False):
+        for vertex in self.vertices:
+            v = Vertex(vertex, origin=self.origin)
+            weight = 1 if not weighted else v.weight
+            v.co.x += translate.x * weight
+            v.co.y += translate.y * weight
+            v.co.z += translate.z * weight
