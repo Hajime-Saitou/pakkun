@@ -25,4 +25,4 @@ class MeshObject(object):
 
     @property
     def faces(self):
-        return Faces(self.object)
+        return Faces(self.mesh.polygons, self.origin)
