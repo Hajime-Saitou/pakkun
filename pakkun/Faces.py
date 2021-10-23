@@ -6,16 +6,21 @@ class Faces(object):
         self.origin = origin
 
     def __getitem__(self, key:int):
-        return Face(self.faces[key])
+        return Face(self.origin.origin, key)
 
     @property
     def length(self):
         return len(self.faces)
 
-    def containingVertex(self, vertexIndex:int):
-        faces = []
-        for face in self.faces:
-            if vertexIndex in face.vertices:
-                faces.append(face)
-        
-        return Faces(faces, self.origin)
+    def __createSubset(self, faces):
+        return None if len(faces) == 0 else Faces(faces, self.origin)
+
+    def containingVertex(self, index:int):
+        return self.__createSubset([ face for face in self.faces if index in face.vertices ])
+
+    def containingMaterial(self, name:str):
+        materialIndex:int = self.origin.origin.data.materials.find(name)
+        if materialIndex == -1:
+            raise KeyError(f"Undefined material name '{name}''.")
+
+        return self.__createSubset([ face for face in self.faces if face.material_index == materialIndex ])
