@@ -1,5 +1,7 @@
-from .MeshObject import MeshObject
 from .Origin import Origin
+from .Iterator import Iterator
+
+from .MeshObject import MeshObject
 from .Vertex import Vertex
 from .Vertices import Vertices
 from .VertexGroup import VertexGroup
@@ -8,8 +10,10 @@ from .Face import Face
 from .Faces import Faces
  
 __all__ = [\
-    "MeshObject",
     "Origin",
+    "Iterator",
+
+    "MeshObject",
     "Vertex",
     "Vertices",
     "VertexGroup",

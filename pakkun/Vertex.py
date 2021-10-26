@@ -1,9 +1,18 @@
 import bpy
 
-class Vertex(bpy.types.MeshVertex):
+class Vertex(object):
     def __init__(self, vertex, origin):
         self.vertex = vertex
         self.origin = origin
+
+        self.__setProperty(vertex)
+
+    def __setProperty(self, vertex):
+        self.index = vertex.index
+        self.co = vertex.co
+        self.hide = vertex.hide
+        self.normal = vertex.normal
+        self.select = vertex.select
 
     @property
     def serialize(self) -> dict:
@@ -11,14 +20,16 @@ class Vertex(bpy.types.MeshVertex):
         properties["index"] = self.index
         properties["co"] = tuple(self.co)
         properties["hide"] = self.hide
-        properties["normal"] = self.hide
+        properties["normal"] = self.normal
         properties["select"] = self.select
-        properties["undeformed_co"] = tuple(self.undeformed_co)
 
         if self.origin.belongTo == "VertexGroup":
             properties["weight"] = [ { self.origin.accessor.name: self.weight } ]
         else:
             properties["weight"] = self.weight
+
+        if self.origin.belongTo == "Face":
+            properties["uv"] = self.uv
 
         return properties
 

@@ -1,12 +1,17 @@
 from .Face import Face
+from .Origin import Origin
+from .Iterator import Iterator
 
-class Faces(object):
+class Faces(Iterator):
     def __init__(self, faces, origin):
+        super().__init__()
+
         self.faces = faces
-        self.origin = origin
+        self.origin = Origin(origin.origin, self)
+        self._iterIndex:int = 0
 
     def __getitem__(self, key:int):
-        return Face(self.origin.origin, key)
+        return Face(self.faces[key], self.origin)
 
     @property
     def length(self):

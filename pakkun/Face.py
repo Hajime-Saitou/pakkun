@@ -1,17 +1,20 @@
+import bpy
 from .Origin import Origin
 from .Vertices import Vertices
 
 class Face(object):
-    def __init__(self, object, index:int):
-        self.object = object
-        self.index = index
-        self.origin = Origin(self.object, self)
-        self.face = self.object.data.polygons[index]
+    def __init__(self, face, origin):
+        self.face = face
+        self.origin = origin
+
+        self.__setProperty(face)
+
+    def __setProperty(self, face):
+        self.index = face.index
 
     @property
     def vertices(self):
-        vertices = [ self.object.data.vertices[index] for index in self.face.vertices ]
-        return Vertices(vertices, origin=self.origin)
+        return Vertices([ self.origin.origin.data.vertices[index] for index in self.face.vertices ], Origin(self.origin.origin, self))
 
     @property
     def loopIndices(self):

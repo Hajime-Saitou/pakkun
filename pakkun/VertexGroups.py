@@ -1,7 +1,10 @@
 from .VertexGroup import VertexGroup
+from .Iterator import Iterator
 
-class VertexGroups(object):
+class VertexGroups(Iterator):
     def __init__(self, object):
+        super().__init__()
+
         self.object = object
 
     def __getitem__(self, key):
