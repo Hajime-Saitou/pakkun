@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Blender backup files
+*.blend1
+
+# tester
+tester/
