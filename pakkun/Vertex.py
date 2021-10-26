@@ -49,9 +49,9 @@ class Vertex(object):
                 return []
 
             weights = []
-            for ordinal, vertexGroup in enumerate(self.origin.origin.vertex_groups):
-                if ordinal in [ group.group for group in self.vertex.groups ]:
-                    weights.append({ vertexGroup.name: self.vertex.groups[ordinal].weight })
+            for vertexGroup in self.vertex.groups:
+                vertexGroups = self.origin.origin.vertex_groups
+                weights.append({ vertexGroups[vertexGroup.group].name: vertexGroup.weight })
 
             return weights
 
