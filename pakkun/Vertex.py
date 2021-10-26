@@ -24,11 +24,11 @@ class Vertex(object):
         properties["index"] = self.index
         properties["co"] = tuple(self.co)
         properties["hide"] = self.hide
-        properties["normal"] = self.normal
+        properties["normal"] = tuple(self.normal)
         properties["select"] = self.select
 
         if self.origin.belongTo == "VertexGroup":
-            properties["weight"] = [ { self.origin.accessor.name: self.weight } ]
+            properties["weight"] = { self.origin.accessor.name: self.weight }
         else:
             properties["weight"] = self.weight
 
@@ -50,12 +50,12 @@ class Vertex(object):
             return self.vertex.groups[vertexGroupIndex].weight
         else:
             if len(self.vertex.groups) == 0:
-                return []
+                return {}
 
-            weights = []
+            weights = {}
             for vertexGroup in self.vertex.groups:
                 vertexGroups = self.origin.origin.vertex_groups
-                weights.append({ vertexGroups[vertexGroup.group].name: vertexGroup.weight })
+                weights[vertexGroups[vertexGroup.group].name] = vertexGroup.weight
 
             return weights
 
@@ -67,6 +67,6 @@ class Vertex(object):
         uvs = {}
         for uvLayer in self.origin.origin.data.uv_layers:
              if len(uvLayer.data) > 0:
-                uvs[uvLayer.name] = uvLayer.data[self.origin.accessor.toLoopIndex(self.index)].uv
+                uvs[uvLayer.name] = tuple(uvLayer.data[self.origin.accessor.toLoopIndex(self.index)].uv)
 
         return uvs
