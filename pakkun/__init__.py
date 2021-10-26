@@ -1,6 +1,8 @@
 from .Origin import Origin
 from .Iterator import Iterator
 
+from .Exception.BlenderModeError import BlenderModeError
+
 from .MeshObject import MeshObject
 from .Vertex import Vertex
 from .Vertices import Vertices
@@ -12,6 +14,8 @@ from .Faces import Faces
 __all__ = [\
     "Origin",
     "Iterator",
+
+    "BlenderModeError",
 
     "MeshObject",
     "Vertex",

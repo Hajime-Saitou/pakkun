@@ -1,4 +1,5 @@
 import bpy
+from .Exception.BlenderModeError import BlenderModeError
 
 class Vertex(object):
     def __init__(self, vertex, origin):
@@ -16,6 +17,9 @@ class Vertex(object):
 
     @property
     def serialize(self) -> dict:
+        if self.origin.origin.mode != "OBJECT":
+            raise BlenderModeError("Blender mode must be set to 'OBJECT'.")
+
         properties = {}
         properties["index"] = self.index
         properties["co"] = tuple(self.co)
@@ -62,6 +66,7 @@ class Vertex(object):
 
         uvs = {}
         for uvLayer in self.origin.origin.data.uv_layers:
-            uvs[uvLayer.name] = uvLayer.data[self.origin.accessor.toLoopIndex(self.index)].uv
+             if len(uvLayer.data) > 0:
+                uvs[uvLayer.name] = uvLayer.data[self.origin.accessor.toLoopIndex(self.index)].uv
 
         return uvs
