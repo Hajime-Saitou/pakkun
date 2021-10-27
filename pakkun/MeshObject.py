@@ -17,7 +17,7 @@ class MeshObject(object):
 
     @property
     def vertexGroups(self):
-        return VertexGroups(self.object)
+        return VertexGroups(self.object.vertex_groups, self.origin)
     
     @property
     def vertices(self):
