@@ -18,5 +18,5 @@ class Iterator(object):
         raise NotImplementedError()
 
     @property
-    def length(self):
+    def length(self) -> int:
         raise NotImplementedError()
