@@ -11,11 +11,17 @@ class Faces(Iterator):
         self._iterIndex:int = 0
 
     def __getitem__(self, key:int):
+        if self.find(key) == -1:
+            raise KeyError(f"Undefined face index '{key}'.")
+
         return Face(self.faces[key], self.origin)
 
     @property
-    def length(self):
+    def length(self) -> int:
         return len(self.faces)
+
+    def find(self, key) -> int:
+        return if 0 <= key < self.length else -1
 
     def __createSubset(self, faces):
         return None if len(faces) == 0 else Faces(faces, self.origin)
