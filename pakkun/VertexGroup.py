@@ -8,13 +8,11 @@ class VertexGroup(object):
         self.vertexGroup = vertexGroup
         self.origin = origin
 
-    @property
-    def name(self) -> str:
-        return self.vertexGroup.name
+        self.__setProperty(vertexGroup)
 
-    @property
-    def index(self) -> int:
-        return self.vertexGroup.index
+    def __setProperty(self, vertexGroup):
+        self.index = vertexGroup.index
+        self.name = vertexGroup.index
 
     @property        
     def vertices(self):
