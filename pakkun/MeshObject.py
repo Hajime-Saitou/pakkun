@@ -1,8 +1,9 @@
 import bpy
+from .Origin import Origin
+from .ShapeKeys import ShapeKeys
 from .VertexGroups import VertexGroups
 from .Vertices import Vertices
 from .Faces import Faces
-from .Origin import Origin
 
 class MeshObject(object):
     def __init__(self, name:str):
@@ -14,6 +15,10 @@ class MeshObject(object):
         self.name = name
         self.mesh = self.object.data
         self.origin = Origin(self.object, self)
+
+    @property
+    def shapeKeys(self):
+        return ShapeKeys(self.object.data.shape_keys, self.origin)
 
     @property
     def vertexGroups(self):
