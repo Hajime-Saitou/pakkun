@@ -10,11 +10,17 @@ class VertexGroups(Iterator):
         self.origin = origin
 
     def __getitem__(self, key):
-        if self.vertexGroups.find(key) == -1:
-            raise KeyError(f"Undefined vertex group '{key}''.")
+        if self.find(key) == -1:
+            raise KeyError(f"Undefined vertex group '{key}'.")
 
         return VertexGroup(self.vertexGroups[key], self.origin)
 
     @property
-    def length(self):
+    def length(self) -> int:
         return len(self.vertexGroups)
+
+    def find(self, key) -> int:
+        if type(key) is int:
+            return key if 0 <= key < self.length else -1
+        else:
+            return self.vertexGroups.find(key)
