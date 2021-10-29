@@ -21,7 +21,7 @@ class Faces(Iterator):
         return len(self.faces)
 
     def find(self, key) -> int:
-        return if 0 <= key < self.length else -1
+        return key if 0 <= key < self.length else -1
 
     def __createSubset(self, faces):
         return None if len(faces) == 0 else Faces(faces, self.origin)
