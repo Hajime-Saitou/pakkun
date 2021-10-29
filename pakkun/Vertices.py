@@ -20,11 +20,9 @@ class Vertices(Iterator):
 
     @property
     def serialize(self) -> dict:
-        dic = { "vertices": [] }
-        for vertex in self.vertices:
-            dic["vertices"].append(Vertex(vertex, self.origin).serialize)
-        
-        return dic
+        properties = {}
+        properties["vertices"] = [ vertex.serialize for vertex in self ]
+        return properties
 
     @property
     def gravity(self) -> Vector:
