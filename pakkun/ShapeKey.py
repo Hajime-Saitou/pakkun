@@ -44,15 +44,13 @@ class ShapeKey(object):
         self.shapeKey.mute = properties["mute"]
 
         relativeTo = self.shapeKey.id_data.key_blocks.find(properties["relativeKeyName"])
-        print(relativeTo)
         if relativeTo < 0:
             relative_key = self.origin.origin.shape_key_add(name=properties["relativeKeyName"])
         else:
             relative_key = self.shapeKey.id_data.key_blocks[properties["relativeKeyName"]]
-        print(relative_key.name)
         self.shapeKey.relative_key = relative_key
 
         self.shapeKey.slider_min = properties["sliderMin"]
         self.shapeKey.slider_max = properties["sliderMax"]
-        self.shapeKey.value = properties["sliderMax"]
+        self.shapeKey.value = properties["value"]
         self.shapeKey.vertex_group = properties["vertexGroupName"]
