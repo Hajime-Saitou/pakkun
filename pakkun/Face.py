@@ -21,7 +21,7 @@ class Face(object):
         return [ index for index in self.face.loop_indices ]
 
     def toLoopIndex(self, vertexIndex:int):
-        return self.loopIndices[[ index for index in self.face.vertices ].index(vertexIndex)]
+        return self.loopIndices[ [ index for index in self.face.vertices ].index(vertexIndex) ]
 
     @property
     def materialIndex(self):
