@@ -20,6 +20,10 @@ class Faces(Iterator):
     def length(self) -> int:
         return len(self.faces)
 
+    @property
+    def indeces(self) -> list:
+        return [ face.index for face in self ]
+
     def find(self, key) -> int:
         return key if 0 <= key < self.length else -1
 
@@ -32,6 +36,6 @@ class Faces(Iterator):
     def containingMaterial(self, materialName:str):
         materialIndex:int = self.origin.origin.data.materials.find(materialName)
         if materialIndex == -1:
-            raise KeyError(f"Undefined material name '{materialName}''.")
+            raise KeyError(f"Undefined material name '{materialName}'.")
 
         return self.__createSubset([ face for face in self.faces if face.material_index == materialIndex ])

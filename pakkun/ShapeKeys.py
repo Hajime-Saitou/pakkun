@@ -36,6 +36,10 @@ class ShapeKeys(Iterator):
     def length(self):
         return len(self.keyBlocks) if self.keyBlocks is not None else 0
 
+    @property
+    def indeces(self) -> list:
+        return [ shapeKey.index for shapeKey in self ]
+
     def find(self, key) -> int:
         if self.keyBlocks is None:
             return -2

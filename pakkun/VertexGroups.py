@@ -19,6 +19,10 @@ class VertexGroups(Iterator):
     def length(self) -> int:
         return len(self.vertexGroups)
 
+    @property
+    def indeces(self) -> list:
+        return [ vertexGroup.index for vertexGroup in self ]
+
     def find(self, key) -> int:
         if type(key) is int:
             return key if 0 <= key < self.length else -1
