@@ -1,7 +1,9 @@
 import bpy
 from mathutils import Vector
 from .Vertex import Vertex
+from .Origin import Origin
 from .Iterator import Iterator
+from .Exception.BlenderTypeError import BlenderTypeError
 
 class Vertices(Iterator):
     def __init__(self, vertices, origin):
@@ -17,6 +19,22 @@ class Vertices(Iterator):
     @property
     def length(self) -> int:
         return len(self.vertices)
+
+    @property
+    def indeces(self) -> list:
+        return [ vertex.index for vertex in self ]
+
+    def __and__(self, other):
+        vertices = [ vertex for vertex in self.vertices if vertex.index in list(set(self.indeces) & set(other.indeces)) ]
+        return Vertices(vertices, Origin(self.origin.origin, self.__class__.__name__))
+
+    def __or__(self, other):
+        vertices = list(set(self.indeces + other.indeces))
+        return Vertices(vertices, Origin(self.origin.origin, self.__class__.__name__))
+
+    def __xor__(self, other):
+        vertices = list(set(self.indeces) - set(other.indeces)) + list(set(other.indeces) - set(self.indeces))
+        return Vertices(vertices, Origin(self.origin.origin, self.__class__.__name__))
 
     @property
     def serialize(self) -> dict:
