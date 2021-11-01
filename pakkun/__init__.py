@@ -2,6 +2,7 @@ from .Origin import Origin
 from .Iterator import Iterator
 
 from .Exception.BlenderModeError import BlenderModeError
+from .Exception.BlenderTypeError import BlenderTypeError
 
 from .MeshObject import MeshObject
 from .Vertex import Vertex
@@ -18,6 +19,7 @@ __all__ = [\
     "Iterator",
 
     "BlenderModeError",
+    "BlenderTypeError",
 
     "MeshObject",
     "Vertex",
