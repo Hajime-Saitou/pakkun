@@ -13,7 +13,9 @@ from .ShapeKey import ShapeKey
 from .ShapeKeys import ShapeKeys
 from .VertexGroup import VertexGroup
 from .VertexGroups import VertexGroups
- 
+from .Node import Node
+from .NodeIos import NodeIos
+
 __all__ = [\
     "Origin",
     "Iterator",
@@ -30,4 +32,6 @@ __all__ = [\
     "ShapeKeys",
     "VertexGroup",
     "VertexGroups",
+    "Node",
+    "NodeIos",
 ]
