@@ -47,6 +47,42 @@ class Node(NodeBase):
         properties |= getattr(sys.modules[__name__], f"{type(self.node).__name__}")(self.node, self.origin).serialize
         return properties
 
+class NodeFrame(NodeBase):
+    def __init__(self, node, origin):
+        super().__init__(node, origin)
+
+    @property
+    def serialize(self):
+        properties = super().serialize
+        return properties
+
+class NodeGroupInput(NodeBase):
+    def __init__(self, node, origin):
+        super().__init__(node, origin)
+
+    @property
+    def serialize(self):
+        properties = super().serialize
+        return properties
+
+class NodeGroupOutput(NodeBase):
+    def __init__(self, node, origin):
+        super().__init__(node, origin)
+
+    @property
+    def serialize(self):
+        properties = super().serialize
+        return properties
+
+class NodeReroute(NodeBase):
+    def __init__(self, node, origin):
+        super().__init__(node, origin)
+
+    @property
+    def serialize(self):
+        properties = super().serialize
+        return properties
+
 class ShaderNodeAddShader(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
@@ -445,6 +481,8 @@ class ShaderNodeMixRGB(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["blendType"] = self.node.blend_type
+        properties["useClamp"] = self.node.use_clamp
         return properties
 
 class ShaderNodeMixShader(NodeBase):
@@ -563,6 +601,43 @@ class ShaderNodeRGBCurve(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["color"] = tuple(self.node.color)
+        properties["mapping"] = self.serializeCurveMapping(self.node.mapping)
+        return properties
+
+    def serializeCurveMapping(self, mapping) -> dict:
+        properties = {}
+        properties["blackLevel"] = tuple(mapping.black_level)
+        properties["clipMaxX"] = mapping.clip_max_x
+        properties["clipMaxY"] = mapping.clip_max_y
+        properties["clipMinX"] = mapping.clip_min_x
+        properties["clipMinY"] = mapping.clip_min_y
+        properties["curves"] = self.serializeCurves(mapping.curves)
+        properties["extend"] = mapping.extend
+        properties["tone"] = mapping.tone
+        properties["useClip"] = mapping.use_clip
+        properties["whiteLevel"] = tuple(mapping.white_level)
+        
+        return properties
+
+    def serializeCurves(self, curves) -> list:
+        properties = []
+        for curve in curves:
+            properties.append({ "points": self.serializeCurvePoints(curve.points) })
+        return properties
+
+    def serializeCurvePoints(self, points) -> list:
+        properties = []
+        for point in points:
+            properties.append(self.serializeCurvePoint(point))
+        return properties
+
+    def serializeCurvePoint(self, point) -> dict:
+        properties = {}
+        properties["handleType"] = point.handle_type
+        properties["location"] = tuple(point.location)
+        properties["select"] = point.select
+        
         return properties
 
 class ShaderNodeRGBToBW(NodeBase):
@@ -657,6 +732,10 @@ class ShaderNodeTexBrick(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["offset"] = self.node.offset
+        properties["offsetFrequency"] = self.node.offset_frequency
+        properties["squash"] = self.node.squash
+        properties["squashFrequency"] = self.node.squash_frequency
         return properties
 
 class ShaderNodeTexChecker(NodeBase):
@@ -686,6 +765,9 @@ class ShaderNodeTexEnvironment(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["imageName"] = self.node.image.name if self.node.image else ""
+        properties["interpolation"] = self.node.interpolation
+        properties["projection"] = self.node.projection
         return properties
 
 class ShaderNodeTexGradient(NodeBase):
@@ -695,6 +777,7 @@ class ShaderNodeTexGradient(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["gradientType"] = self.node.gradient_type
         return properties
 
 class ShaderNodeTexIES(NodeBase):
@@ -704,6 +787,8 @@ class ShaderNodeTexIES(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["mode"] = self.node.mode
+        properties["ies"] = self.node.ies if self.node.ies else ""
         return properties
 
 class ShaderNodeTexImage(NodeBase):
@@ -713,6 +798,10 @@ class ShaderNodeTexImage(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["imageName"] = self.node.image.name if self.node.image else ""
+        properties["interpolation"] = self.node.interpolation
+        properties["projection"] = self.node.projection
+        properties["extension"] = self.node.extension
         return properties
 
 class ShaderNodeTexMagic(NodeBase):
@@ -722,6 +811,7 @@ class ShaderNodeTexMagic(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["turbulenceDepth"] = self.node.turbulence_depth
         return properties
 
 class ShaderNodeTexMusgrave(NodeBase):
@@ -731,6 +821,8 @@ class ShaderNodeTexMusgrave(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["musgraveDimensions"] = self.node.musgrave_dimensions
+        properties["musgraveType"] = self.node.musgrave_type
         return properties
 
 class ShaderNodeTexNoise(NodeBase):
@@ -740,6 +832,7 @@ class ShaderNodeTexNoise(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["noiseDimensions"] = self.node.noise_dimensions
         return properties
 
 class ShaderNodeTexPointDensity(NodeBase):
@@ -749,6 +842,13 @@ class ShaderNodeTexPointDensity(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["pointSource"] = self.node.point_source
+        properties["objectName"] = self.node.object.name if self.node.object else ""
+        properties["space"] = self.node.space
+        properties["radius"] = self.node.radius
+        properties["interpolation"] = self.node.interpolation
+        properties["resolution"] = self.node.resolution
+        properties["particleColorSource"] = self.node.particle_color_source
         return properties
 
 class ShaderNodeTexSky(NodeBase):
@@ -758,6 +858,16 @@ class ShaderNodeTexSky(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["skyType"] = self.node.sky_type
+        properties["sunDisc"] = self.node.sun_disc
+        properties["sunSize"] = self.node.sun_size
+        properties["sunIntensity"] = self.node.sun_intensity
+        properties["sunElevation"] = self.node.sun_elevation
+        properties["sunRotation"] = self.node.sun_rotation
+        properties["altitude"] = self.node.altitude
+        properties["airDensity"] = self.node.air_density
+        properties["dustDensity"] = self.node.dust_density
+        properties["ozoneDensity"] = self.node.ozone_density
         return properties
 
 class ShaderNodeTexVoronoi(NodeBase):
@@ -767,6 +877,9 @@ class ShaderNodeTexVoronoi(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["voronoiDimensions"] = self.node.voronoi_dimensions
+        properties["feature"] = self.node.feature
+        properties["distance"] = self.node.distance
         return properties
 
 class ShaderNodeTexWave(NodeBase):
@@ -776,6 +889,9 @@ class ShaderNodeTexWave(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["waveType"] = self.node.wave_type
+        properties["bandsDirection"] = self.node.bands_direction
+        properties["waveProfile"] = self.node.wave_profile
         return properties
 
 class ShaderNodeTexWhiteNoise(NodeBase):
@@ -785,6 +901,7 @@ class ShaderNodeTexWhiteNoise(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["noiseDimensions"] = self.node.noise_dimensions
         return properties
 
 class ShaderNodeTree(NodeBase):

@@ -13,11 +13,11 @@ class NodeIos(object):
     @property
     def serializable(self) -> bool:
         print(self.ios.type)
-        return self.ios.type in [ "VALUE", "VECTOR", "RGBA" ]
+        return self.ios.type in [ "VALUE", "VECTOR", "RGBA", "CUSTOM" ]
 
     @property
     def serializableDefaultValue(self) -> any:
-        if self.ios.type == "VALUE":
+        if self.ios.type in [ "VALUE" ]:
             return self.defaultValue
         elif self.ios.type in [ "VECTOR", "RGBA" ]:
             return tuple(self.defaultValue)
@@ -29,7 +29,8 @@ class NodeIos(object):
         properties = {}
 
         properties["name"] = self.ios.name
-        properties["defaultValue"] = self.serializableDefaultValue
+        if self.ios.type != "CUSTOM":
+            properties["defaultValue"] = self.serializableDefaultValue
         properties["enabled"] = self.ios.enabled
         properties["hide"] = self.ios.hide
         properties["hideValue"] = self.ios.hide_value
