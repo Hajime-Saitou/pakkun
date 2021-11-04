@@ -1,5 +1,5 @@
 import sys
-from .NodeIos import NodeIos
+from .NodeSocket import NodeSocket
 
 class NodeBase(object):
     def __init__(self, node, origin):
@@ -19,12 +19,12 @@ class NodeBase(object):
         properties["dimensions"] = tuple(self.node.dimensions)
         properties["height"] = self.node.height
         properties["hide"] = self.node.hide
-        properties["inputs"] = [ ios.serialize for ios in [ NodeIos(ios) for ios in self.node.inputs ] if ios.serializable ]
+        properties["inputs"] = [ socket.serialize for socket in [ NodeSocket(socket) for socket in self.node.inputs ] if socket.serializable ]
         properties["label"] = self.node.label
         properties["location"] = tuple(self.node.location)
         properties["mute"] = self.node.mute
         properties["label"] = self.node.label
-        properties["outputs"] = [ ios.serialize for ios in [ NodeIos(ios) for ios in self.node.outputs ] if ios.serializable ]
+        properties["outputs"] = [ socket.serialize for socket in [ NodeSocket(socket) for socket in self.node.outputs ] if socket.serializable ]
         properties["parentName"] = self.node.parent.name if self.node.parent else ""
         properties["select"] = self.node.select
         properties["showOptions"] = self.node.show_options
