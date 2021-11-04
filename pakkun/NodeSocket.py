@@ -14,7 +14,6 @@ class NodeSocket(object):
 
     @property
     def serializable(self) -> bool:
-        print(self.socket.type)
         return self.socket.type in [ "BOOLEAN", "COLLECTION", "CUSTOM", "GEOMETRY", "IMAGE", "INT", "OBJECT", "RGBA", "SHADER", "STRING", "VALUE", "VECTOR", ]
 
     @property
