@@ -19,7 +19,7 @@ class NodeSocket(object):
 
     @property
     def serializableDefaultValue(self) -> any:
-        if self.socket.type in [ "BOOLEAN", "INT", "STRING", "VALUE",  ]:
+        if self.socket.type in [ "BOOLEAN", "INT", "STRING", "VALUE", ]:
             return self.defaultValue
         elif self.socket.type in [ "RGBA", "VECTOR", ]:
             return tuple(self.defaultValue)

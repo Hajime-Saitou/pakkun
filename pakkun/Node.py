@@ -273,7 +273,9 @@ class ShaderNodeBump(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["Invert"] = self.node.invert
         return properties
+
 class ShaderNodeCameraData(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
@@ -290,6 +292,7 @@ class ShaderNodeClamp(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["clampType"] = self.node.clamp_type
         return properties
 
 class ShaderNodeCombineHSV(NodeBase):
@@ -335,6 +338,7 @@ class ShaderNodeDisplacement(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["space"] = self.node.space
         return properties
 
 class ShaderNodeEeveeSpecular(NodeBase):
@@ -452,6 +456,8 @@ class ShaderNodeMapRange(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["interpolationType"] = self.node.interpolation_type
+        properties["clamp"] = self.node.clamp
         return properties
 
 class ShaderNodeMapping(NodeBase):
@@ -461,6 +467,7 @@ class ShaderNodeMapping(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["vectorType"] = self.node.vector_type
         return properties
 
 class ShaderNodeMath(NodeBase):
@@ -470,6 +477,7 @@ class ShaderNodeMath(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["operation"] = self.node.operation
         properties["useClamp"] = self.node.use_clamp
 
         return properties
@@ -519,6 +527,8 @@ class ShaderNodeNormalMap(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["space"] = self.node.space
+        properties["uvMap"] = self.node.uv_map
         return properties
 
 class ShaderNodeObjectInfo(NodeBase):
@@ -656,6 +666,8 @@ class ShaderNodeScript(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["mode"] = self.node.mode
+        properties["scriptName"] = self.node.script.name
         return properties
 
 class ShaderNodeSeparateHSV(NodeBase):
@@ -967,6 +979,7 @@ class ShaderNodeVectorDisplacement(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["space"] = self.node.space
         return properties
 
 class ShaderNodeVectorMath(NodeBase):
@@ -985,6 +998,8 @@ class ShaderNodeVectorRotate(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["rotarionType"] = self.node.rotation_type
+        properties["invert"] = self.node.invert
         return properties
 
 class ShaderNodeVectorTransform(NodeBase):
@@ -994,6 +1009,9 @@ class ShaderNodeVectorTransform(NodeBase):
     @property
     def serialize(self):
         properties = super().serialize
+        properties["vectorType"] = self.node.vector_type
+        properties["convertFrom"] = self.node.convert_from
+        properties["convertTo"] = self.node.convert_to
         return properties
 
 class ShaderNodeVertexColor(NodeBase):
