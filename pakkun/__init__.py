@@ -14,6 +14,7 @@ from .ShapeKeys import ShapeKeys
 from .VertexGroup import VertexGroup
 from .VertexGroups import VertexGroups
 from .Node import Node
+from .Nodes import Nodes
 from .NodeSocket import NodeSocket
 
 __all__ = [\
@@ -33,5 +34,6 @@ __all__ = [\
     "VertexGroup",
     "VertexGroups",
     "Node",
+    "Nodes",
     "NodeSocket",
 ]
