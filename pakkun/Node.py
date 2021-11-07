@@ -37,6 +37,30 @@ class NodeBase(object):
 
         return properties
 
+    @property
+    def thereLinkedInInputs(self) -> bool:
+        return sum([ len(input.links) for input in self.node.inputs ]) != 0
+
+    @property
+    def thereLinkedInOutputs(self) -> bool:
+        return sum([ len(output.links) for output in self.node.outputs ]) != 0
+
+    @property
+    def dangled(self) -> bool:
+        return not (self.thereLinkedInInputs | self.thereLinkedInOutputs)
+
+    @property
+    def thereHaveLinkErrorInInputs(self) -> bool:
+        return False in [ link.is_valid for link in [ input.links[0] for input in self.node.inputs if input.links ]]
+
+    @property
+    def thereHaveLinkErrorInOutputs(self) -> bool:
+        return False in [ link.is_valid for link in [ output.links[0] for output in self.node.outputs if output.links ]]
+
+    @property
+    def linkedError(self) -> bool:
+        return self.thereHaveLinkErrorInInputs | self.thereHaveLinkErrorInOutputs
+
 class Node(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
@@ -48,6 +72,7 @@ class Node(NodeBase):
         return properties
 
 class NodeFrame(NodeBase):
+    category = "Layout"
     def __init__(self, node, origin):
         super().__init__(node, origin)
 

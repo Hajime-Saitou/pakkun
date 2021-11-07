@@ -46,3 +46,9 @@ class Nodes(Iterator):
         properties["nodes"] = [ Node(node, self.origin).serialize for node in self.nodes ]
 
         return properties
+
+    def danglingNodes(self):
+        return Nodes([ node for node in self.nodes if Node(node, None).dangled ], self.origin)
+
+    def linkedErrorNodes(self):
+        return Nodes([ node for node in self.nodes if Node(node, None).linkedError ], self.origin)
