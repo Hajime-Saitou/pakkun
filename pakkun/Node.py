@@ -66,15 +66,23 @@ class Node(NodeBase):
         super().__init__(node, origin)
 
     @property
+    def subNodeClass(self):
+        return getattr(sys.modules[__name__], f"{type(self.node).__name__}")(self.node, self.origin)
+
+    @property
     def serialize(self) -> dict:
         properties = super().serialize
-        properties |= getattr(sys.modules[__name__], f"{type(self.node).__name__}")(self.node, self.origin).serialize
+        properties |= self.subNodeClass.serialize
         return properties
 
+    @property
+    def category(self) -> str:
+        return self.subNodeClass.category
+
 class NodeFrame(NodeBase):
-    category = "Layout"
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Layout"
 
     @property
     def serialize(self):
@@ -84,6 +92,7 @@ class NodeFrame(NodeBase):
 class NodeGroupInput(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Group"
 
     @property
     def serialize(self):
@@ -93,6 +102,7 @@ class NodeGroupInput(NodeBase):
 class NodeGroupOutput(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Group"
 
     @property
     def serialize(self):
@@ -102,6 +112,7 @@ class NodeGroupOutput(NodeBase):
 class NodeReroute(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Layout"
 
     @property
     def serialize(self):
@@ -111,6 +122,7 @@ class NodeReroute(NodeBase):
 class ShaderNodeAddShader(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -120,6 +132,7 @@ class ShaderNodeAddShader(NodeBase):
 class ShaderNodeAmbientOcclusion(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Input"
 
     @property
     def serialize(self):
@@ -133,6 +146,7 @@ class ShaderNodeAmbientOcclusion(NodeBase):
 class ShaderNodeAttribute(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Input"
 
     @property
     def serialize(self):
@@ -144,6 +158,7 @@ class ShaderNodeAttribute(NodeBase):
 class ShaderNodeBackground(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Layout"
 
     @property
     def serialize(self):
@@ -153,6 +168,7 @@ class ShaderNodeBackground(NodeBase):
 class ShaderNodeBevel(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Input"
 
     @property
     def serialize(self):
@@ -164,6 +180,7 @@ class ShaderNodeBevel(NodeBase):
 class ShaderNodeBlackbody(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Converter"
 
     @property
     def serialize(self):
@@ -173,14 +190,17 @@ class ShaderNodeBlackbody(NodeBase):
 class ShaderNodeBrightContrast(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Color"
 
     @property
     def serialize(self):
         properties = super().serialize
         return properties
+
 class ShaderNodeBsdfAnisotropic(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -190,6 +210,7 @@ class ShaderNodeBsdfAnisotropic(NodeBase):
 class ShaderNodeBsdfDiffuse(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -199,6 +220,7 @@ class ShaderNodeBsdfDiffuse(NodeBase):
 class ShaderNodeBsdfGlass(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -209,6 +231,7 @@ class ShaderNodeBsdfGlass(NodeBase):
 class ShaderNodeBsdfGlossy(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -219,6 +242,7 @@ class ShaderNodeBsdfGlossy(NodeBase):
 class ShaderNodeBsdfHair(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -228,6 +252,7 @@ class ShaderNodeBsdfHair(NodeBase):
 class ShaderNodeBsdfHairPrincipled(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -237,6 +262,7 @@ class ShaderNodeBsdfHairPrincipled(NodeBase):
 class ShaderNodeBsdfPrincipled(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -248,6 +274,7 @@ class ShaderNodeBsdfPrincipled(NodeBase):
 class ShaderNodeBsdfRefraction(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -258,6 +285,7 @@ class ShaderNodeBsdfRefraction(NodeBase):
 class ShaderNodeBsdfToon(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -267,6 +295,7 @@ class ShaderNodeBsdfToon(NodeBase):
 class ShaderNodeBsdfTranslucent(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -276,6 +305,7 @@ class ShaderNodeBsdfTranslucent(NodeBase):
 class ShaderNodeBsdfTransparent(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -285,6 +315,7 @@ class ShaderNodeBsdfTransparent(NodeBase):
 class ShaderNodeBsdfVelvet(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -294,6 +325,7 @@ class ShaderNodeBsdfVelvet(NodeBase):
 class ShaderNodeBump(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Vector"
 
     @property
     def serialize(self):
@@ -304,6 +336,7 @@ class ShaderNodeBump(NodeBase):
 class ShaderNodeCameraData(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Input"
 
     @property
     def serialize(self):
@@ -313,6 +346,7 @@ class ShaderNodeCameraData(NodeBase):
 class ShaderNodeClamp(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Converter"
 
     @property
     def serialize(self):
@@ -323,6 +357,7 @@ class ShaderNodeClamp(NodeBase):
 class ShaderNodeCombineHSV(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Converter"
 
     @property
     def serialize(self):
@@ -332,6 +367,7 @@ class ShaderNodeCombineHSV(NodeBase):
 class ShaderNodeCombineRGB(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Converter"
 
     @property
     def serialize(self):
@@ -341,6 +377,7 @@ class ShaderNodeCombineRGB(NodeBase):
 class ShaderNodeCombineXYZ(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Converter"
 
     @property
     def serialize(self):
@@ -350,6 +387,7 @@ class ShaderNodeCombineXYZ(NodeBase):
 class ShaderNodeCustomGroup(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Group"
 
     @property
     def serialize(self):
@@ -359,6 +397,7 @@ class ShaderNodeCustomGroup(NodeBase):
 class ShaderNodeDisplacement(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Vector"
 
     @property
     def serialize(self):
@@ -369,6 +408,7 @@ class ShaderNodeDisplacement(NodeBase):
 class ShaderNodeEeveeSpecular(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -378,6 +418,7 @@ class ShaderNodeEeveeSpecular(NodeBase):
 class ShaderNodeEmission(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -387,6 +428,7 @@ class ShaderNodeEmission(NodeBase):
 class ShaderNodeFresnel(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Input"
 
     @property
     def serialize(self):
@@ -396,6 +438,7 @@ class ShaderNodeFresnel(NodeBase):
 class ShaderNodeGamma(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Color"
 
     @property
     def serialize(self):
@@ -405,6 +448,7 @@ class ShaderNodeGamma(NodeBase):
 class ShaderNodeGroup(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Group"
 
     @property
     def serialize(self):
@@ -414,6 +458,7 @@ class ShaderNodeGroup(NodeBase):
 class ShaderNodeHairInfo(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Input"
 
     @property
     def serialize(self):
@@ -423,6 +468,7 @@ class ShaderNodeHairInfo(NodeBase):
 class ShaderNodeHoldout(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -432,6 +478,7 @@ class ShaderNodeHoldout(NodeBase):
 class ShaderNodeHueSaturation(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Color"
 
     @property
     def serialize(self):
@@ -441,6 +488,7 @@ class ShaderNodeHueSaturation(NodeBase):
 class ShaderNodeInvert(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Color"
 
     @property
     def serialize(self):
@@ -450,6 +498,7 @@ class ShaderNodeInvert(NodeBase):
 class ShaderNodeLayerWeight(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Input"
 
     @property
     def serialize(self):
@@ -459,6 +508,7 @@ class ShaderNodeLayerWeight(NodeBase):
 class ShaderNodeLightFalloff(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Color"
 
     @property
     def serialize(self):
@@ -468,6 +518,7 @@ class ShaderNodeLightFalloff(NodeBase):
 class ShaderNodeLightPath(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Input"
 
     @property
     def serialize(self):
@@ -477,6 +528,7 @@ class ShaderNodeLightPath(NodeBase):
 class ShaderNodeMapRange(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Converter"
 
     @property
     def serialize(self):
@@ -488,6 +540,7 @@ class ShaderNodeMapRange(NodeBase):
 class ShaderNodeMapping(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Vector"
 
     @property
     def serialize(self):
@@ -498,6 +551,7 @@ class ShaderNodeMapping(NodeBase):
 class ShaderNodeMath(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Converter"
 
     @property
     def serialize(self):
@@ -510,6 +564,7 @@ class ShaderNodeMath(NodeBase):
 class ShaderNodeMixRGB(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Color"
 
     @property
     def serialize(self):
@@ -521,6 +576,7 @@ class ShaderNodeMixRGB(NodeBase):
 class ShaderNodeMixShader(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -530,6 +586,7 @@ class ShaderNodeMixShader(NodeBase):
 class ShaderNodeNewGeometry(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Input"
 
     @property
     def serialize(self):
@@ -539,6 +596,7 @@ class ShaderNodeNewGeometry(NodeBase):
 class ShaderNodeNormal(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Vector"
 
     @property
     def serialize(self):
@@ -548,6 +606,7 @@ class ShaderNodeNormal(NodeBase):
 class ShaderNodeNormalMap(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Vector"
 
     @property
     def serialize(self):
@@ -559,6 +618,7 @@ class ShaderNodeNormalMap(NodeBase):
 class ShaderNodeObjectInfo(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Input"
 
     @property
     def serialize(self):
@@ -568,6 +628,7 @@ class ShaderNodeObjectInfo(NodeBase):
 class ShaderNodeOutputAOV(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Output"
 
     @property
     def serialize(self):
@@ -577,6 +638,7 @@ class ShaderNodeOutputAOV(NodeBase):
 class ShaderNodeOutputLight(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Undefined"
 
     @property
     def serialize(self):
@@ -586,6 +648,7 @@ class ShaderNodeOutputLight(NodeBase):
 class ShaderNodeOutputLineStyle(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Undefined"
 
     @property
     def serialize(self):
@@ -595,6 +658,7 @@ class ShaderNodeOutputLineStyle(NodeBase):
 class ShaderNodeOutputMaterial(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Output"
 
     @property
     def serialize(self):
@@ -605,6 +669,7 @@ class ShaderNodeOutputMaterial(NodeBase):
 class ShaderNodeOutputWorld(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Undefined"
 
     @property
     def serialize(self):
@@ -614,6 +679,7 @@ class ShaderNodeOutputWorld(NodeBase):
 class ShaderNodeParticleInfo(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Input"
 
     @property
     def serialize(self):
@@ -623,6 +689,7 @@ class ShaderNodeParticleInfo(NodeBase):
 class ShaderNodeRGB(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Input"
 
     @property
     def serialize(self):
@@ -632,6 +699,7 @@ class ShaderNodeRGB(NodeBase):
 class ShaderNodeRGBCurve(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Color"
 
     @property
     def serialize(self):
@@ -678,6 +746,7 @@ class ShaderNodeRGBCurve(NodeBase):
 class ShaderNodeRGBToBW(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Converter"
 
     @property
     def serialize(self):
@@ -687,6 +756,7 @@ class ShaderNodeRGBToBW(NodeBase):
 class ShaderNodeScript(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Script"
 
     @property
     def serialize(self):
@@ -698,6 +768,7 @@ class ShaderNodeScript(NodeBase):
 class ShaderNodeSeparateHSV(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Converter"
 
     @property
     def serialize(self):
@@ -707,6 +778,7 @@ class ShaderNodeSeparateHSV(NodeBase):
 class ShaderNodeSeparateRGB(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Converter"
 
     @property
     def serialize(self):
@@ -716,6 +788,7 @@ class ShaderNodeSeparateRGB(NodeBase):
 class ShaderNodeSeparateXYZ(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Converter"
 
     @property
     def serialize(self):
@@ -725,6 +798,7 @@ class ShaderNodeSeparateXYZ(NodeBase):
 class ShaderNodeShaderToRGB(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Converter"
 
     @property
     def serialize(self):
@@ -734,6 +808,7 @@ class ShaderNodeShaderToRGB(NodeBase):
 class ShaderNodeSqueeze(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Undefined"
 
     @property
     def serialize(self):
@@ -743,6 +818,7 @@ class ShaderNodeSqueeze(NodeBase):
 class ShaderNodeSubsurfaceScattering(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -753,6 +829,7 @@ class ShaderNodeSubsurfaceScattering(NodeBase):
 class ShaderNodeTangent(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Input"
 
     @property
     def serialize(self):
@@ -765,6 +842,7 @@ class ShaderNodeTangent(NodeBase):
 class ShaderNodeTexBrick(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Texture"
 
     @property
     def serialize(self):
@@ -778,6 +856,7 @@ class ShaderNodeTexBrick(NodeBase):
 class ShaderNodeTexChecker(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Texture"
 
     @property
     def serialize(self):
@@ -787,6 +866,7 @@ class ShaderNodeTexChecker(NodeBase):
 class ShaderNodeTexCoord(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Input"
 
     @property
     def serialize(self):
@@ -798,6 +878,7 @@ class ShaderNodeTexCoord(NodeBase):
 class ShaderNodeTexEnvironment(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Texture"
 
     @property
     def serialize(self):
@@ -810,6 +891,7 @@ class ShaderNodeTexEnvironment(NodeBase):
 class ShaderNodeTexGradient(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Texture"
 
     @property
     def serialize(self):
@@ -820,6 +902,7 @@ class ShaderNodeTexGradient(NodeBase):
 class ShaderNodeTexIES(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Texture"
 
     @property
     def serialize(self):
@@ -831,6 +914,7 @@ class ShaderNodeTexIES(NodeBase):
 class ShaderNodeTexImage(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Texture"
 
     @property
     def serialize(self):
@@ -844,6 +928,7 @@ class ShaderNodeTexImage(NodeBase):
 class ShaderNodeTexMagic(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Texture"
 
     @property
     def serialize(self):
@@ -854,6 +939,7 @@ class ShaderNodeTexMagic(NodeBase):
 class ShaderNodeTexMusgrave(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Texture"
 
     @property
     def serialize(self):
@@ -865,6 +951,7 @@ class ShaderNodeTexMusgrave(NodeBase):
 class ShaderNodeTexNoise(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Texture"
 
     @property
     def serialize(self):
@@ -875,6 +962,7 @@ class ShaderNodeTexNoise(NodeBase):
 class ShaderNodeTexPointDensity(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Texture"
 
     @property
     def serialize(self):
@@ -891,6 +979,7 @@ class ShaderNodeTexPointDensity(NodeBase):
 class ShaderNodeTexSky(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Texture"
 
     @property
     def serialize(self):
@@ -910,6 +999,7 @@ class ShaderNodeTexSky(NodeBase):
 class ShaderNodeTexVoronoi(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Texture"
 
     @property
     def serialize(self):
@@ -922,6 +1012,7 @@ class ShaderNodeTexVoronoi(NodeBase):
 class ShaderNodeTexWave(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Texture"
 
     @property
     def serialize(self):
@@ -934,6 +1025,7 @@ class ShaderNodeTexWave(NodeBase):
 class ShaderNodeTexWhiteNoise(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Texture"
 
     @property
     def serialize(self):
@@ -944,6 +1036,7 @@ class ShaderNodeTexWhiteNoise(NodeBase):
 class ShaderNodeTree(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Undefined"
 
     @property
     def serialize(self):
@@ -953,6 +1046,7 @@ class ShaderNodeTree(NodeBase):
 class ShaderNodeUVAlongStroke(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Undefined"
 
     @property
     def serialize(self):
@@ -962,6 +1056,7 @@ class ShaderNodeUVAlongStroke(NodeBase):
 class ShaderNodeUVMap(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Input"
 
     @property
     def serialize(self):
@@ -970,9 +1065,11 @@ class ShaderNodeUVMap(NodeBase):
         properties["uvMap"] = self.node.uv_map
         return properties
 
+# Color Ramp
 class ShaderNodeValToRGB(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Converter"
 
     @property
     def serialize(self):
@@ -982,6 +1079,7 @@ class ShaderNodeValToRGB(NodeBase):
 class ShaderNodeValue(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Input"
 
     @property
     def serialize(self):
@@ -991,6 +1089,7 @@ class ShaderNodeValue(NodeBase):
 class ShaderNodeVectorCurve(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Vector"
 
     @property
     def serialize(self):
@@ -1000,6 +1099,7 @@ class ShaderNodeVectorCurve(NodeBase):
 class ShaderNodeVectorDisplacement(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Vector"
 
     @property
     def serialize(self):
@@ -1010,6 +1110,7 @@ class ShaderNodeVectorDisplacement(NodeBase):
 class ShaderNodeVectorMath(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Converter"
 
     @property
     def serialize(self):
@@ -1019,6 +1120,7 @@ class ShaderNodeVectorMath(NodeBase):
 class ShaderNodeVectorRotate(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Vector"
 
     @property
     def serialize(self):
@@ -1030,6 +1132,7 @@ class ShaderNodeVectorRotate(NodeBase):
 class ShaderNodeVectorTransform(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Vector"
 
     @property
     def serialize(self):
@@ -1042,6 +1145,7 @@ class ShaderNodeVectorTransform(NodeBase):
 class ShaderNodeVertexColor(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Input"
 
     @property
     def serialize(self):
@@ -1052,6 +1156,7 @@ class ShaderNodeVertexColor(NodeBase):
 class ShaderNodeVolumeAbsorption(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -1061,6 +1166,7 @@ class ShaderNodeVolumeAbsorption(NodeBase):
 class ShaderNodeVolumeInfo(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Input"
 
     @property
     def serialize(self):
@@ -1070,6 +1176,7 @@ class ShaderNodeVolumeInfo(NodeBase):
 class ShaderNodeVolumePrincipled(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -1079,6 +1186,7 @@ class ShaderNodeVolumePrincipled(NodeBase):
 class ShaderNodeVolumeScatter(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Shader"
 
     @property
     def serialize(self):
@@ -1088,6 +1196,7 @@ class ShaderNodeVolumeScatter(NodeBase):
 class ShaderNodeWavelength(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Converter"
 
     @property
     def serialize(self):
@@ -1097,6 +1206,7 @@ class ShaderNodeWavelength(NodeBase):
 class ShaderNodeWireframe(NodeBase):
     def __init__(self, node, origin):
         super().__init__(node, origin)
+        self.category = "Input"
 
     @property
     def serialize(self):

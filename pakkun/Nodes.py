@@ -52,3 +52,6 @@ class Nodes(Iterator):
 
     def linkedErrorNodes(self):
         return Nodes([ node for node in self.nodes if Node(node, None).linkedError ], self.origin)
+
+    def containingCategory(self, category:str):
+        return Nodes([ node for node in self.nodes if Node(node, None).category == category ], self.origin)
