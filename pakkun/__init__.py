@@ -16,6 +16,7 @@ from .VertexGroups import VertexGroups
 from .Node import Node
 from .Nodes import Nodes
 from .NodeSocket import NodeSocket
+from .NodeTree import NodeTree
 
 __all__ = [\
     "Origin",
@@ -36,4 +37,5 @@ __all__ = [\
     "Node",
     "Nodes",
     "NodeSocket",
+    "NodeTree",
 ]
