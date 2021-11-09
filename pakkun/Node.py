@@ -12,6 +12,10 @@ class NodeBase(object):
         self.name = node.name
 
     @property
+    def index(self) -> int:
+        return [ node.as_pointer() for node in self.node.id_data.nodes ].index(self.node.as_pointer())
+
+    @property
     def serialize(self) -> dict:
         properties = {}
         properties["name"] = self.name

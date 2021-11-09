@@ -17,6 +17,7 @@ from .Node import Node
 from .Nodes import Nodes
 from .NodeSocket import NodeSocket
 from .NodeTree import NodeTree
+from .NodeLink import NodeLink
 
 __all__ = [\
     "Origin",
@@ -38,4 +39,5 @@ __all__ = [\
     "Nodes",
     "NodeSocket",
     "NodeTree",
+    "NodeLink",
 ]
