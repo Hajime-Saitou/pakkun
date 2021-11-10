@@ -1,6 +1,7 @@
 import bpy
 from .Origin import Origin
 from .Nodes import Nodes
+from .NodeLinks import NodeLinks
 
 class NodeTree(object):
     def __init__(self, nodeTree, origin):
