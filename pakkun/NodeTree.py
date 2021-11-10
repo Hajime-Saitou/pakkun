@@ -17,9 +17,9 @@ class NodeTree(object):
     def nodes(self):
         return Nodes(self.nodeTree.nodes, self.origin) if self.nodeTree else None
 
-    # @property
-    # def links(self):
-    #     return Links(self.nodeTree.links, self.origin) if self.nodeTree else None
+    @property
+    def links(self):
+        return NodeLinks(self.nodeTree.links, self.origin) if self.nodeTree else None
 
     @property
     def serialize(self) -> dict:
@@ -27,7 +27,7 @@ class NodeTree(object):
 
         properties["activeInput"] = self.nodeTree.active_input
         properties["activeOutput"] = self.nodeTree.active_output
-        # properties["links"] = self.links.serialize
+        properties["links"] = self.links.serialize
         properties["name"] = self.nodeTree.name
         properties["nodes"] = self.nodes.serialize
         properties["tag"] = self.nodeTree.tag
