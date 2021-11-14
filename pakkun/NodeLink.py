@@ -20,7 +20,7 @@ class NodeLink(object):
         properties["fromSocketName"] = self.link.from_socket.name
         properties["isHidden"] = self.link.is_hidden
         properties["isMuted"] = self.link.is_muted
-        properties["isValie"] = self.link.is_valid
+        properties["isValid"] = self.link.is_valid
         properties["toNodeName"] = self.link.to_node.name
         properties["toSocketIndex"] = [ socket.as_pointer() for socket in self.link.to_node.inputs ].index(self.link.to_socket.as_pointer())
         properties["toSocketName"] = self.link.to_socket.name
