@@ -14,6 +14,7 @@ class StringTokenizer(object):
     def data(self, data:str):
         self.__data = re.split(r"\s", data)
         self.generator = self.__generator
+        self.pushBacked:list = []
 
     @property
     def __generator(self) -> str:
@@ -24,8 +25,14 @@ class StringTokenizer(object):
 
     @property
     def next(self) -> str:
-        token = self.generator.__next__()
+        if len(self.pushBacked):
+            token = self.pushBacked.pop(0)
+        else:
+            token = self.generator.__next__()
         return token
+
+    def pushBack(self, token:str):
+        self.pushBacked.insert(0, token)
 
 class BvhChannels(object):
     def __init__(self, channels:tuple):
@@ -42,12 +49,20 @@ class BvhJoint(object):
         if parent:
             parent.childs.append(self)
 
+        self.keyFrames:list = []
+
+class BvhMotion(object):
+    def __init__(self):
+        self.frames:int = 0
+        self.frameTime:float = 0
+
 class BvhParser(object):
     def __init__(self):
         self.filename:str = ""
         self.loaded:bool = False
         self.tokenizer = StringTokenizer()
         self.joints:list = []
+        self.motionInfo = BvhMotion()
 
     def load(self, filename:str):
         with open(filename, "r") as f:
@@ -64,7 +79,8 @@ class BvhParser(object):
         self.tokenizer.data = data
 
     def parse(self):
-        return self.hierarchy()
+        self.hierarchy()
+        self.motion()
 
     def hierarchy(self):
         token = self.tokenizer.next
@@ -78,9 +94,9 @@ class BvhParser(object):
         if token != "ROOT":
             raise ValueError("Invalid keyword in root.")
 
-        bonename = self.bonename()
+        boneName = self.boneName()
         self.leftBrace()
-        newJoint = BvhJoint(bonename, self.offset(), self.channels(), None)
+        newJoint = BvhJoint(boneName, self.offset(), self.channels(), None)
         self.joints.append(newJoint)
         self.joint(newJoint)
         self.rightBrace()
@@ -95,12 +111,20 @@ class BvhParser(object):
         if token != "}":
             raise ValueError(f"Invalid right brace {token}.")
 
-    def bonename(self):
+    def boneName(self):
         token = self.tokenizer.next
         if not re.match(r"[A-Za-z_]\w*", token):
             raise ValueError(f"Invalid bone name {token}.")
-        
-        return token
+
+        boneName = token
+
+        if boneName == "End":
+            token = self.tokenizer.next
+            if token != "Site":
+                raise ValueError(f"Invalid bone name {token}.")
+            boneName += token
+
+        return boneName
 
     def offset(self):
         token = self.tokenizer.next
@@ -134,38 +158,87 @@ class BvhParser(object):
 
         return ( channels, channelNames )
 
-    def joint(self, parent:BvhJoint):
+    def joint(self, parentJoint:BvhJoint):
         token = self.tokenizer.next
-        if token == "End":
+        if token == "MOTION":
+            self.tokenizer.pushBack(token)
+            return
+        elif token == "End":
             token = self.tokenizer.next
-            if token == "Site":
-                self.endsite(parent)
-                return False
+            if token != "Site":
+                raise ValueError("Invalid end site.")
+            self.endsite(parentJoint)
+            return
+        elif token != "JOINT":
+            raise ValueError(f"Invalid keyword in joint {token}.")
 
-        if token == "}":
-            return True
+        boneName = self.boneName()
 
-        if token != "JOINT":
-            return False
-
-        bonename = self.bonename()
         self.leftBrace()
-        newJoint = BvhJoint(bonename, self.offset(), self.channels(), parent)
+
+        newJoint = BvhJoint(boneName, self.offset(), self.channels(), parentJoint)
         self.joints.append(newJoint)
 
-        while self.joint(newJoint):
-            pass
+        # search child joints
+        while True:
+            token = self.tokenizer.next
+            self.tokenizer.pushBack(token)
+            if token in [ "JOINT", "End" ]:
+                self.joint(newJoint)
+            else:
+                break
 
         self.rightBrace()
 
-        return True
+        # serach brother joints
+        while True:
+            token = self.tokenizer.next
+            self.tokenizer.pushBack(token)
+            if token in [ "JOINT", "End" ]:
+                self.joint(parentJoint)
+            else:
+                break
 
-    def endsite(self, parent:BvhJoint):
+    def endsite(self, parentJoint:BvhJoint):
         self.leftBrace()
-        self.joints.append(BvhJoint("End Site", self.offset(), ( None, None ), parent))
+        newJoint = BvhJoint("End Site", self.offset(), ( 0, None ), parentJoint)
+        self.joints.append(newJoint)
         self.rightBrace()
 
-# class Bvh(object):
+    def motion(self):
+        token = self.tokenizer.next
+        if token != "MOTION":
+            raise ValueError("Invalid keyword in motion.")
+
+        self.frames()
+        self.frameTime()
+        self.keyFrames()
+
+    def frames(self):
+        token = self.tokenizer.next
+        if token != "Frames:":
+            raise ValueError("Invalid keyword in frames.")
+
+        self.motionInfo.frames = int(self.tokenizer.next)
+
+    def frameTime(self):
+        token = self.tokenizer.next
+        if token != "Frame":
+            raise ValueError("Invalid keyword in frame time.")
+
+        token = self.tokenizer.next
+        if token != "Time:":
+            raise ValueError("Invalid keyword in frame time.")
+
+        token = self.tokenizer.next
+        self.motionInfo.frameTime = float(token)
+
+    def keyFrames(self):
+        for _ in range(self.motionInfo.frames):
+            for joint in self.joints:
+                channels = joint.channels.size
+                if channels:
+                    joint.keyFrames.append([ float(self.tokenizer.next) for _ in range(channels) ])
 
 if __name__ == "__main__":
     filename:str = "C:\\temp\\cmuconvert-daz-01-09\\01\\01_01.bvh"
@@ -173,8 +246,8 @@ if __name__ == "__main__":
     parser.load(filename)
     try:
         parser.parse()
-    except:
-        pass
+    except ValueError as e:
+        print(e)
 
     for joint in parser.joints:
         print(joint.name, joint.offset, joint.channels.size, joint.channels.names, joint.parent.name if joint.parent else "root")
