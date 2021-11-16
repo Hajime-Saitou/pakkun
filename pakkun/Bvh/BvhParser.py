@@ -56,17 +56,21 @@ class BvhMotion(object):
         self.frames:int = 0
         self.frameTime:float = 0
 
+class BvhParseResults(object):
+    def __init__(self):
+        self.joints:list = []
+        self.motionInfo = BvhMotion()
+
 class BvhParser(object):
     def __init__(self):
         self.filename:str = ""
         self.loaded:bool = False
         self.tokenizer = StringTokenizer()
-        self.joints:list = []
-        self.motionInfo = BvhMotion()
+        self.results = BvhParseResults()
 
     def load(self, filename:str):
         with open(filename, "r") as f:
-            self.tokenizer.data = f.read()
+            self.data = f.read()
 
         self.loaded = True
 
@@ -81,6 +85,8 @@ class BvhParser(object):
     def parse(self):
         self.hierarchy()
         self.motion()
+
+        return self.results
 
     def hierarchy(self):
         token = self.tokenizer.next
@@ -97,7 +103,7 @@ class BvhParser(object):
         boneName = self.boneName()
         self.leftBrace()
         newJoint = BvhJoint(boneName, self.offset(), self.channels(), None)
-        self.joints.append(newJoint)
+        self.results.joints.append(newJoint)
         self.joint(newJoint)
         self.rightBrace()
 
@@ -177,7 +183,7 @@ class BvhParser(object):
         self.leftBrace()
 
         newJoint = BvhJoint(boneName, self.offset(), self.channels(), parentJoint)
-        self.joints.append(newJoint)
+        self.results.joints.append(newJoint)
 
         # search child joints
         while True:
@@ -202,7 +208,7 @@ class BvhParser(object):
     def endsite(self, parentJoint:BvhJoint):
         self.leftBrace()
         newJoint = BvhJoint("End Site", self.offset(), ( 0, None ), parentJoint)
-        self.joints.append(newJoint)
+        self.results.joints.append(newJoint)
         self.rightBrace()
 
     def motion(self):
@@ -219,7 +225,7 @@ class BvhParser(object):
         if token != "Frames:":
             raise ValueError("Invalid keyword in frames.")
 
-        self.motionInfo.frames = int(self.tokenizer.next)
+        self.results.motionInfo.frames = int(self.tokenizer.next)
 
     def frameTime(self):
         token = self.tokenizer.next
@@ -231,11 +237,11 @@ class BvhParser(object):
             raise ValueError("Invalid keyword in frame time.")
 
         token = self.tokenizer.next
-        self.motionInfo.frameTime = float(token)
+        self.results.motionInfo.frameTime = float(token)
 
     def keyFrames(self):
-        for _ in range(self.motionInfo.frames):
-            for joint in self.joints:
+        for _ in range(self.results.motionInfo.frames):
+            for joint in self.results.joints:
                 channels = joint.channels.size
                 if channels:
                     joint.keyFrames.append([ float(self.tokenizer.next) for _ in range(channels) ])
@@ -245,11 +251,11 @@ if __name__ == "__main__":
     parser = BvhParser()
     parser.load(filename)
     try:
-        parser.parse()
+        results = parser.parse()
     except ValueError as e:
         print(e)
 
-    for joint in parser.joints:
+    for joint in results.joints:
         print(joint.name, joint.offset, joint.channels.size, joint.channels.names, joint.parent.name if joint.parent else "root")
 
 
