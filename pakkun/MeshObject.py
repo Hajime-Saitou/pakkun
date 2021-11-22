@@ -4,6 +4,7 @@ from .ShapeKeys import ShapeKeys
 from .VertexGroups import VertexGroups
 from .Vertices import Vertices
 from .Faces import Faces
+from .MaterialSlots import MaterialSlots
 
 class MeshObject(object):
     def __init__(self, name:str):
@@ -31,3 +32,7 @@ class MeshObject(object):
     @property
     def faces(self):
         return Faces(self.mesh.polygons, self.origin)
+
+    @property
+    def materialSlots(self):
+        return MaterialSlots(self.object.material_slots, self.origin)

@@ -21,6 +21,7 @@ from .NodeLink import NodeLink
 from .NodeLinks import NodeLinks
 from .Material import Material
 from .MaterialSlot import MaterialSlot
+from .MaterialSlots import MaterialSlots
 
 __all__ = [\
     "Origin",
@@ -46,4 +47,5 @@ __all__ = [\
     "NodeLinks",
     "Material",
     "MaterialSlot",
+    "MaterialSlots",
 ]
