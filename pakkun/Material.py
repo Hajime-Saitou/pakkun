@@ -1,6 +1,7 @@
 import bpy
 from .Origin import Origin
 from .NodeTree import NodeTree
+from .Faces import Faces
 
 class Material(object):
     def __init__(self, material, origin):
@@ -15,6 +16,10 @@ class Material(object):
     @property
     def nodeTree(self):
         return NodeTree(self.material.node_tree, self.origin)
+
+    @property
+    def slotIndices(self) -> list:
+        return [ ordinal for ordinal, slot in enumerate(self.origin.origin.material_slots) if slot.material == self.material ]
 
     @property
     def serialize(self):
@@ -53,4 +58,7 @@ class Material(object):
         node.inputs["Metallic"].default_value = self.material.metallic
         node.inputs["Specular"].default_value = self.material.specular_intensity
         node.inputs["Roughness"].default_value = self.material.roughness
-        
+
+    @property
+    def faces(self):
+        return Faces([ face for face in self.origin.origin.data.polygons if face.material_index in self.slotIndices ], self.origin)

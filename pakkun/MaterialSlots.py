@@ -27,7 +27,7 @@ class MaterialSlots(Iterator):
         return len(self.materialSlots) if self.materialSlots is not None else 0
 
     def find(self, key) -> int:
-        if self.nodes is None:
+        if self.materialSlots is None:
             return -2
 
         if type(key) is int:
